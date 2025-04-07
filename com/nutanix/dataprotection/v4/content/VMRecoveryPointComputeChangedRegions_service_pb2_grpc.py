@@ -5,7 +5,7 @@ import warnings
 
 from com.nutanix.dataprotection.v4.content import VMRecoveryPointComputeChangedRegions_service_pb2 as com_dot_nutanix_dot_dataprotection_dot_v4_dot_content_dot_VMRecoveryPointComputeChangedRegions__service__pb2
 
-GRPC_GENERATED_VERSION = '1.68.1'
+GRPC_GENERATED_VERSION = '1.70.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -34,7 +34,7 @@ class VMRecoveryPointComputeChangedRegionsServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.vmRecoveryPointComputeChangedRegions = channel.unary_unary(
+        self.vmRecoveryPointComputeChangedRegions = channel.unary_stream(
                 '/com.nutanix.dataprotection.v4.content.VMRecoveryPointComputeChangedRegionsService/vmRecoveryPointComputeChangedRegions',
                 request_serializer=com_dot_nutanix_dot_dataprotection_dot_v4_dot_content_dot_VMRecoveryPointComputeChangedRegions__service__pb2.VmRecoveryPointComputeChangedRegionsArg.SerializeToString,
                 response_deserializer=com_dot_nutanix_dot_dataprotection_dot_v4_dot_content_dot_VMRecoveryPointComputeChangedRegions__service__pb2.VmRecoveryPointComputeChangedRegionsRet.FromString,
@@ -58,7 +58,7 @@ class VMRecoveryPointComputeChangedRegionsServiceServicer(object):
 
 def add_VMRecoveryPointComputeChangedRegionsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'vmRecoveryPointComputeChangedRegions': grpc.unary_unary_rpc_method_handler(
+            'vmRecoveryPointComputeChangedRegions': grpc.unary_stream_rpc_method_handler(
                     servicer.vmRecoveryPointComputeChangedRegions,
                     request_deserializer=com_dot_nutanix_dot_dataprotection_dot_v4_dot_content_dot_VMRecoveryPointComputeChangedRegions__service__pb2.VmRecoveryPointComputeChangedRegionsArg.FromString,
                     response_serializer=com_dot_nutanix_dot_dataprotection_dot_v4_dot_content_dot_VMRecoveryPointComputeChangedRegions__service__pb2.VmRecoveryPointComputeChangedRegionsRet.SerializeToString,
@@ -85,7 +85,7 @@ class VMRecoveryPointComputeChangedRegionsService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(
+        return grpc.experimental.unary_stream(
             request,
             target,
             '/com.nutanix.dataprotection.v4.content.VMRecoveryPointComputeChangedRegionsService/vmRecoveryPointComputeChangedRegions',

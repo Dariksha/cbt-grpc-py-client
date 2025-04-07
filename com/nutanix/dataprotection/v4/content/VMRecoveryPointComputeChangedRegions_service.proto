@@ -37,7 +37,7 @@ service VMRecoveryPointComputeChangedRegionsService {
    * Changed Regions information for the regions that have changed in the right half-open interval
    * Returns information pertaining to all the regions that have changed in the right half-open interval: [start, length).
    */
-  rpc vmRecoveryPointComputeChangedRegions(VmRecoveryPointComputeChangedRegionsArg) returns (VmRecoveryPointComputeChangedRegionsRet) {
+  rpc vmRecoveryPointComputeChangedRegions(VmRecoveryPointComputeChangedRegionsArg) returns (stream VmRecoveryPointComputeChangedRegionsRet) {
     option (ntnx_api_http) = {
       POST: "/dataprotection/v4/content/recovery-points/{recoveryPointExtId}/vm-recovery-points/{vmRecoveryPointExtId}/disk-recovery-points/{extId}/$actions/compute-changed-regions"
     };
