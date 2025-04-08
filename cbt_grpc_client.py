@@ -56,14 +56,27 @@ def fetch_jwt_token():
     else:
         raise ValueError(f"Failed to get JWT token. HTTP {response.status_code}: {response.text}")
 
-def compute_vm_changed_regions(server_address, jwt_token):
-    channel = grpc.insecure_channel(
+def create_grpc_channel(server_address):
+    with open("./server.cert", 'rb') as f:
+        trusted_certs = f.read()
+    # Create SSL channel credentials without certificate verification
+    ssl_credentials = grpc.ssl_channel_credentials(root_certificates=trusted_certs)
+    # Create secure channel with SSL credentials
+    # Explicitly bypass certificate verification
+    channel = grpc.secure_channel(
         server_address,
+        ssl_credentials,
         options=[
+            ('grpc.ssl_target_name_override', 'prism.nutanix.local'),
+            ('grpc.default_authority', 'prism.nutanix.local'),
             ('grpc.max_receive_message_length', 100 * 1024 * 1024),
             ('grpc.max_send_message_length', 100 * 1024 * 1024),
         ]
     )
+    return channel
+
+def compute_vm_changed_regions(server_address, jwt_token):
+    channel = create_grpc_channel(server_address)
     stub = VMRecoveryPointComputeChangedRegions_service_pb2_grpc.VMRecoveryPointComputeChangedRegionsServiceStub(channel)
 
     request = VMRecoveryPointComputeChangedRegions_service_pb2.VmRecoveryPointComputeChangedRegionsArg(
@@ -101,7 +114,7 @@ def compute_vm_changed_regions(server_address, jwt_token):
         print(f"RPC failed: {e.code()}: {e.details()}")
 
 def compute_volume_group_changed_regions(server_address):
-    channel = grpc.insecure_channel(server_address)
+    channel = create_grpc_channel(server_address)
     stub = VolumeGroupRecoveryPointComputeChangedRegions_service_pb2_grpc.VolumeGroupRecoveryPointComputeChangedRegionsServiceStub(channel)
 
     request = VolumeGroupRecoveryPointComputeChangedRegions_service_pb2.VolumeGroupRecoveryPointComputeChangedRegionsArg(
